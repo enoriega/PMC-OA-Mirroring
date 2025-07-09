@@ -18,3 +18,10 @@ docker run --rm -it -v /host/mirror/path:/app -e PARALLEL_TRANSFERS="4" pmc-mirr
 ```
 
 The image is configured to download the "bulk" dataset, but can be used to mirror the historical OCR and author manuscripts datasets too by specifying the corresponding remote directory with the `REMOTE_DIR` environment variable. See https://pmc.ncbi.nlm.nih.gov/tools/ftp/ to find the details of the remote filesystem layout.
+
+
+The command to run an __apptainer__ container built from this image is:
+```bash 
+apptainer run --cleanenv --bind /host/mirror/path:/app --env PARALLEL_TRANSFERS=4 pmc-mirror.sif
+```
+Where `pmc-mirror.sif` is pulled from dockerhub by the apptainer command. This works on HPC environments.
