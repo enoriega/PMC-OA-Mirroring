@@ -67,3 +67,9 @@ Optionally, you can specify the batch size with the `BATCH_SIZE` environment var
 ```bash
 docker run --rm -it -v /path/to/flattened/xml:/app/input -v /path/to/splits:/app/output -e BATCH_SIZE=5000 pmc-split
 ```
+
+The command to run an __apptainer__ container built from this image is:
+```bash 
+apptainer run --cleanenv --bind /path/to/flattened/xml:/app/input --bind /path/to/splits:/app/output --env BATCH_SIZE=5000 pmc-split.sif
+```
+Where `pmc-split.sif` is pulled from dockerhub by the apptainer command. This works on HPC environments.
