@@ -18,4 +18,4 @@ ENV PARALLEL_JOBS=4
 COPY uncompress.sh .
 
 # Run the uncompress script when the container starts
-CMD [ "bash", "uncompress.sh" ]
+CMD [ "bash", "/app/uncompress.sh" ]

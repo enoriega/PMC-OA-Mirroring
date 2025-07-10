@@ -25,3 +25,26 @@ The command to run an __apptainer__ container built from this image is:
 apptainer run --cleanenv --bind /host/mirror/path:/app --env PARALLEL_TRANSFERS=4 pmc-mirror.sif
 ```
 Where `pmc-mirror.sif` is pulled from dockerhub by the apptainer command. This works on HPC environments.
+
+## Uncompress tar archives in mirror
+First, build the docker container.
+```bash
+docker build -f Uncompress.dockerfile -t pmc-uncompress .
+```
+
+Then, run a docker container, specifying the path where the mirrored files are and where they are going to be uncompressed.
+```bash
+docker run --rm -it -v /host/mirror/path:/app/input -v /host/output/path pmc-uncompress
+```
+
+Optionally, you can specify the number of parallel extractions with the `PARALLEL_JOBS` environment variable (default: 4)
+```bash
+docker run --rm -it -v /host/mirror/path:/app/input -v /host/output/path -e PARALLEL_JOBS="10" pmc-uncompress
+```
+
+
+The command to run an __apptainer__ container built from this image is:
+```bash 
+apptainer run --cleanenv --bind /host/mirror/path:/app/input --bind /host/output/path --env PARALLEL_JOBS=10 pmc-uncompress.sif
+```
+Where `pmc-mirror.sif` is pulled from dockerhub by the apptainer command. This works on HPC environments.
