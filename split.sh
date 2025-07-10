@@ -2,6 +2,8 @@
 redis-server --dir "${DEST_BASE}" --dbfilename splits.rdb --save "60 1" &
 
 REDIS_PREFIX="pmc_split"
+DEST_BASE="/app/output"
+SRC_DIR="/app/input"
 
 # Initialize or get current index and directory
 current_index=$(redis-cli GET "$REDIS_PREFIX:file_index")
