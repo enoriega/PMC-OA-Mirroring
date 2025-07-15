@@ -12,6 +12,7 @@ mkdir -p "${OUTPUT_DIR}/txt"
 uncompress_tar_gz() {
 	local file="$1"
 	local out_dir="$2"
+	local file_list_dir="$3"
 	local base_file
 	base_file="$(basename "$file")"
 
@@ -22,7 +23,9 @@ uncompress_tar_gz() {
 	fi
 
 	echo "Uncompressing: $base_file"
-	tar -xzf "$file" -C "$out_dir" --transform='s|.*/||'
+
+	mkdir -p "${file_list_dir}"
+	tar -xvzf "$file" -C "$out_dir" --transform='s|.*/||' > "$file_list_dir/$base_file.files"
 
 	if [ $? -ne 0 ]; then
 		echo "Error uncompressing $file"
@@ -41,11 +44,19 @@ export -f uncompress_tar_gz
 
 # Uncompress XML files
 find "${INPUT_DIR}" -type f -name "*_xml*.tar.gz" | \
-	xargs -P "${PARALLEL_JOBS}" -I {} bash -c 'uncompress_tar_gz "$0" "$1"' {} "${OUTPUT_DIR}/xml"
+	xargs -P "${PARALLEL_JOBS}" -I {} bash -c 'uncompress_tar_gz "$0" "$1" "$2"' {} "${OUTPUT_DIR}/xml" "${OUTPUT_DIR}/xml_file_lists"
+
+# Concatenate all XML file lists into a single file and sort it
+find "${OUTPUT_DIR}/xml_file_lists" -type f -name "*.files" | \
+	xargs cat | sed 's#.*/##' | sort -u > "${OUTPUT_DIR}/xml_file_lists/all_files.txt"
 
 # # Uncompress Text files
 find "${INPUT_DIR}" -type f -name "*_txt*.tar.gz" | \
- xargs -P "${PARALLEL_JOBS}" -I {} bash -c 'uncompress_tar_gz "$0" "$1"' {} "${OUTPUT_DIR}/txt"
+ xargs -P "${PARALLEL_JOBS}" -I {} bash -c 'uncompress_tar_gz "$0" "$1" "$2"' {} "${OUTPUT_DIR}/txt" "${OUTPUT_DIR}/txt_file_lists"
+
+# Concatenate all Text file lists into a single file and sort it
+find "${OUTPUT_DIR}/txt_file_lists" -type f -name "*.files" | \
+	xargs cat | sed 's#.*/##' | sort -u > "${OUTPUT_DIR}/txt_file_lists/all_files.txt"
 
 # Force Redis to persist to disk
 redis-cli SAVE
