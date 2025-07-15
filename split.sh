@@ -4,11 +4,22 @@ REDIS_PREFIX="pmc_split"
 DEST_BASE="/app/output"
 SRC_DIR="/app/input"
 
-redis-server --dir "${DEST_BASE}" --dbfilename splits.rdb --save "60 1" &
+# redis-server --dir "${DEST_BASE}" --dbfilename splits.rdb --save "60 1" &
 
-sleep 1
+# sleep 1
 
-uv run --script /app/split.py --input-dir "$SRC_DIR" --output-dir "$DEST_BASE" --batch-size "$BATCH_SIZE"
+# Generate a sorted list of files in the source directory
+echo "Generating sorted list of files in $SRC_DIR"
+find "$SRC_DIR" -maxdepth 1 -type f > /app/unsorted_files.txt
+sort /app/unsorted_files.txt -o /app/sorted_files.txt
+echo "Sorted files generated."
+
+uv run --script /app/split.py --output-dir "$DEST_BASE" --batch-size "$BATCH_SIZE" --prefix-path "$HOST_INPUT_DIR"
+
+# Erase temporary files
+echo
+rm /app/unsorted_files.txt
+rm /app/sorted_files.txt
 
 # # Initialize or get current index and directory
 # current_index=$(redis-cli GET "$REDIS_PREFIX:file_index")
