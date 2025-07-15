@@ -23,7 +23,7 @@ job_ix = 0
 file_ix = 0
 
 # Enumrate all the files in the input directory
-with open("sorted_files.txt", "r") as f:
+with open(os.path.join(args.output_dir, "sorted_files.txt"), "r") as f:
     for file_ix, file_path in tqdm(enumerate(f), desc="Enumerating files", unit="file"):
         
         # Compute the directory index for the current batch base on the file index and batch size

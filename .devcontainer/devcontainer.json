@@ -1,0 +1,20 @@
+{
+  "name": "PMC Split Container",
+  "dockerFile": "../Split.dockerfile",
+  "postCreateCommand": "apk add --no-cache git",
+  "postStartCommand": "redis-server --dir /app/output --dbfilename splits.rdb --save \"60 1\"",
+  "workspaceFolder": "/app",
+  "mounts": [
+    // "source=${localWorkspaceFolder},target=/app,type=bind",
+	"source=${localWorkspaceFolder}/scratch/uncompressed/xml,target=/app/input,type=bind",
+	"source=${localWorkspaceFolder}/scratch/splits,target=/app/output,type=bind"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}
