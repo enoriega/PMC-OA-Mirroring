@@ -36,14 +36,8 @@ else:
     existing = set()
 print(f"{datetime.now()}: Found {len(existing)} existing processed files.")
 
-if existing:
-    # Compute the current file index based on the number of existing files
-    file_ix = len(existing) - 1
-    job_ix = (file_ix // args.batch_size) + 1
-    dir_path = os.path.join(args.output_dir, f"xml_{job_ix}")
-else:
-    file_ix = 0
-    job_ix = 0
+file_ix = 0
+job_ix = 0
 
 # Enumrate all the files in the input directory
 with open(args.input_file_list, "r") as f, open(processed_files_path, "a") as pf:

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REDIS_PREFIX="pmc_split"
 DEST_BASE="/app/output"
 SRC_DIR="/app/input"
 HOST_INPUT_FILE_LIST="/app/file_list.txt"
