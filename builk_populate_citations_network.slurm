@@ -15,4 +15,4 @@
 
 # Run this on PUMA for better high memory availability
 
-apptainer run --cleanenv --bind /xdisk/enoriega/enoriega/pmc-citations:/input --bind /xdisk/enoriega/enoriega/pmc-citations:/output --env CONN_STRING="sqlite:////output/citation_network.db" pmc-citations.sif /bin/sh /app/bulk_populate_db.sh
+apptainer run --cleanenv --bind /xdisk/enoriega/enoriega/pmc-citations:/input --bind /xdisk/enoriega/enoriega/citation_network:/output --env CONN_STRING="sqlite:////output/citation_network.db" pmc-citations.sif /bin/sh /app/bulk_populate_db.sh
